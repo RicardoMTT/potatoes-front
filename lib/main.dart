@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:potatoes_test/app_routing/routing.dart';
 import 'package:potatoes_test/graphql.dart';
@@ -9,7 +9,6 @@ import 'package:potatoes_test/app_constants/color.dart';
 
 void main() {
   Get.lazyPut<GraphQLClient>(() => getGraphqlClient());
-
   runApp(MyApp());
 }
 
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
     return GraphQLProvider(
       client: ValueNotifier(Get.find<GraphQLClient>()),
       child: GetMaterialApp(
-        title: 'Flutter Demo',
+        title: 'Clasificador',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: kPrimaryColor,

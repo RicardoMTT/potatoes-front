@@ -35,6 +35,7 @@ class LoginScreenForm extends StatelessWidget {
                     child: CommonTextField(
                       keyBoardType: TextInputType.emailAddress,
                       textFieldBloc: _formBloc.email,
+                      icon: Icons.email,
                     )
                     //  TextField(
                     //   decoration: InputDecoration(
@@ -51,6 +52,7 @@ class LoginScreenForm extends StatelessWidget {
                       keyBoardType: TextInputType.visiblePassword,
                       textFieldBloc: _formBloc.password,
                       isPassword: true,
+                      icon: Icons.paste,
                     )
                     //  TextField(
                     //   obscureText: true,

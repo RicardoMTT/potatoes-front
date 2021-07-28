@@ -14,6 +14,7 @@ class ContactWidget extends StatelessWidget {
         body: Container(
           color: Colors.transparent,
           child: ListView.builder(
+            physics: BouncingScrollPhysics(),
             itemCount: contacts.length,
             itemBuilder: (context, index) {
               return CommonCard();

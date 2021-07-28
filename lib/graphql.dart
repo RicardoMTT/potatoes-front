@@ -3,7 +3,7 @@ import 'package:potatoes_test/jwt.dart';
 
 GraphQLClient getGraphqlClient() {
   final HttpLink httpLink = HttpLink(
-    'http://192.168.1.10:3001/graphql',
+    'https://potatoes-app-heroku.herokuapp.com/graphql',
   );
 
   final AuthLink authLink = AuthLink(

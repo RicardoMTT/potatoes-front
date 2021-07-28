@@ -1,15 +1,22 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:potatoes_test/app_constants/color.dart';
-import 'package:potatoes_test/app_widgets/common_text_field.dart';
-import 'package:potatoes_test/profile/screens/form_bloc.dart';
+import 'package:potatoes_test/app_widgets/common_avatar.dart';
+import 'package:potatoes_test/app_widgets/image_picker_wrapper.dart';
+import 'package:potatoes_test/profile/profile_controller.dart';
+import 'package:potatoes_test/profile/screens/screen2.dart';
+
+import '../avatar_profile.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    File _file;
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -56,14 +63,15 @@ class ProfileScreen extends StatelessWidget {
                         Container(
                           margin: EdgeInsets.only(left: 30, top: 10),
                           child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Welcome back',
-                                style: GoogleFonts.lato(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24,
-                                    color: Colors.white),
-                              )),
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Welcome back',
+                              style: GoogleFonts.lato(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  color: Colors.white),
+                            ),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 30, top: 40),
@@ -71,11 +79,11 @@ class ProfileScreen extends StatelessWidget {
                             alignment: Alignment.centerRight,
                             child: Column(
                               children: [
-                                Text(
-                                  'Ricardo Tovar.',
-                                  style: GoogleFonts.lato(
-                                      color: Colors.white, fontSize: 20),
-                                )
+                                Obx(() => Text(
+                                      '${ProfileController.to.firstName.value} ${ProfileController.to.lastName.value}.',
+                                      style: GoogleFonts.lato(
+                                          color: Colors.white, fontSize: 20),
+                                    ))
                               ],
                             ),
                           ),
@@ -84,98 +92,37 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   Positioned(
+                      top: 210,
+                      left: 160,
+                      child: ImagePickerWrapper(
+                        builder: (context, trigger) => InkWell(
+                          onTap: () async {
+                            _file = await trigger();
+                            ProfileController.to.fileRx.value = _file;
+                          },
+                          child: Text(
+                            'Cambiar foto',
+                            style: TextStyle(fontSize: 16, color: Colors.blue),
+                          ),
+                        ),
+                      )),
+                  Positioned(
                     top: 110,
                     left: 30,
                     child: Container(
                         height: 120,
-                        width: 100,
+                        width: 120,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: Image(
-                            image: NetworkImage(
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrG4EXV-tktmJoAhbdaOhnQorH_2vQQspj19tt6IYLpdthQfPZY71cCg0jzcU&s'),
-                            fit: BoxFit.cover,
-                            width: 100,
-                          ),
-                        )),
+                        child: HeadScreenButton()),
                   )
                 ]),
               ),
               SizedBox(
                 height: 10,
               ),
-              BlocProvider(
-                create: (_) => ProfileFormBloc(),
-                child: Builder(
-                  builder: (context) {
-                    final _formBloc = BlocProvider.of<ProfileFormBloc>(context);
-                    return Column(
-                      children: [
-                        CommonTextField(
-                          keyBoardType: TextInputType.text,
-                          textFieldBloc: _formBloc.firstName,
-                          placeholder: "Nombre y apellido",
-                          icon: Icons.person,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CommonTextField(
-                          keyBoardType: TextInputType.number,
-                          textFieldBloc: _formBloc.firstName,
-                          placeholder: "DNI",
-                          icon: Icons.domain_verification_outlined,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CommonTextField(
-                            keyBoardType: TextInputType.number,
-                            textFieldBloc: _formBloc.firstName,
-                            placeholder: "Teléfono",
-                            icon: Icons.phone),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CommonTextField(
-                          keyBoardType: TextInputType.emailAddress,
-                          textFieldBloc: _formBloc.firstName,
-                          placeholder: "email",
-                          icon: Icons.email,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CommonTextField(
-                          keyBoardType: TextInputType.visiblePassword,
-                          textFieldBloc: _formBloc.firstName,
-                          placeholder: "Contraseña",
-                          icon: Icons.keyboard,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          width: 330,
-                          height: 50,
-                          child: RaisedButton(
-                            textColor: Colors.white,
-                            color: kPrimaryColor,
-                            onPressed: () {},
-                            child: Text('Guardar cambios'),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        )
-                      ],
-                    );
-                  },
-                ),
-              )
+              Prueba()
 
               // Expanded(
               //   child: GridView.count(

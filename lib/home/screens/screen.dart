@@ -41,22 +41,24 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('Home'),
           ),
           body: Query(
-            options: QueryOptions(document: getSlidersQueryDoc),
+            options: QueryOptions(
+                document: getSlidersQueryDoc,
+                fetchPolicy: FetchPolicy.networkOnly),
             builder: (result, {fetchMore, refetch}) {
               if (result.isLoading && result.data == null) {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
               }
-              print(result);
+              print("DATA ${result}");
               final List<dynamic> sliders =
                   result.data['sliders'] as List<dynamic>;
-              print(sliders);
               return ValueListenableBuilder<double>(
                 valueListenable: _notifierScroll,
                 builder: (context, value, _) {
                   return PageView.builder(
                     controller: _controller,
+                    physics: BouncingScrollPhysics(),
                     itemCount: sliders.length,
                     itemBuilder: (context, index) {
                       final slider = sliders[index];
@@ -75,27 +77,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                   transform: Matrix4.identity()
                                     ..setEntry(3, 2, 0.002)
                                     ..rotateY(rotation),
-                                  child: Image.network(
-                                    "http://192.168.1.10:3001" +
-                                        slider['avatar']['url'],
-                                    fit: BoxFit.cover,
-                                    width: sliderWidth,
-                                    height: sliderHeight,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      "https://potatoes-app-heroku.herokuapp.com" +
+                                          slider['avatar']['url'],
+                                      fit: BoxFit.cover,
+                                      width: sliderWidth,
+                                      height: sliderHeight,
+                                    ),
                                   )),
                             ),
-                            Divider(),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Text(
                               'Descripción',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 20),
                             ),
                             SizedBox(
-                              height: 10,
+                              height: 5,
                             ),
-                            TextOneLine(
-                              slider['descripcion'],
-                              overflow: TextOverflow.ellipsis,
-                            )
+                            Container(
+                                child: Flexible(
+                              child: RichText(
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                strutStyle: StrutStyle(fontSize: 12.0),
+                                text: TextSpan(
+                                    style: TextStyle(color: Colors.black),
+                                    text: slider['descripcion']),
+                              ),
+                            )),
                           ],
                         ),
                       );
@@ -123,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
               //                         color: Colors.red,
               //                       ),
               //                       child: Image.network(
-              //                         "http://192.168.1.10:3001" +
+              //                         "https://potatoes-app-heroku.herokuapp.com" +
               //                             e['avatar']['url'],
               //                         fit: BoxFit.cover,
               //                       ),

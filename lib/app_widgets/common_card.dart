@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:potatoes_test/contacts/screens/map/map.dart';
+import 'package:potatoes_test/contacts/screens/map/screen.dart';
 
 class CommonCard extends StatelessWidget {
   const CommonCard({Key key}) : super(key: key);
@@ -95,7 +97,7 @@ class _BottomSheetEmergencyState extends State<BottomSheetEmergency> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 160,
+      height: 190,
       color: Colors.white,
       // transform: Matrix4.identity()
       //   ..rotateX(10)
@@ -109,12 +111,14 @@ class _BottomSheetEmergencyState extends State<BottomSheetEmergency> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FlutterLogo(
-                    size: 80,
-                  ),
+                  Image.network(
+                      'https://image.freepik.com/free-vector/man-profile-cartoon_18591-58484.jpg'),
                   Text('Empresa Antunez')
                 ],
               ),
+            ),
+            SizedBox(
+              height: 20,
             ),
             Container(
               height: 50,
@@ -135,7 +139,9 @@ class _BottomSheetEmergencyState extends State<BottomSheetEmergency> {
                   RaisedButton(
                     elevation: 1,
                     color: Colors.white,
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(MapScren());
+                    },
                     child: Icon(
                       Icons.my_location_rounded,
                       color: Colors.blue,
