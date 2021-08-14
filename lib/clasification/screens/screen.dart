@@ -2,15 +2,91 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:potatoes_test/app_constants/color.dart';
+import 'package:potatoes_test/app_widgets/common_success_dialog.dart';
 import 'package:potatoes_test/app_widgets/image_picker_wrapper.dart';
+import 'package:potatoes_test/clasification/contacts/screens/screen.dart';
+import 'package:potatoes_test/clasification/recommendations/screen.dart';
 import 'package:potatoes_test/clasification/screens/clasification_controller.dart';
 import 'package:potatoes_test/clasification/widgets/card_image_plant.dart';
-import 'package:potatoes_test/contacts/screens/screen.dart';
-import 'package:potatoes_test/recommendations/screen.dart';
+import 'package:tflite/tflite.dart';
 
-class ClasificationScreen extends StatelessWidget {
+class ClasificationScreen extends StatefulWidget {
   const ClasificationScreen({Key key}) : super(key: key);
+
+  @override
+  _ClasificationScreenState createState() => _ClasificationScreenState();
+}
+
+class _ClasificationScreenState extends State<ClasificationScreen> {
+  File _image;
+  final picker = ImagePicker();
+  List _salida;
+  bool _estado = false;
+
+  @override
+  void initState() {
+    loadModel();
+
+    super.initState();
+  }
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    print('pickedFile $pickedFile');
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+    print("CLASFICAR");
+    clasifyImage(pickedFile);
+  }
+
+  clasifyImage(image) async {
+    var output = await Tflite.runModelOnImage(
+        path: image.path,
+        numResults: 2,
+        threshold: 0.5,
+        imageMean: 127.5,
+        imageStd: 127.5);
+    print('output $output');
+    ClasifficationController.to.stateClasification.value = output[0]['index'];
+
+    setState(() {
+      _salida = output;
+      _estado = true;
+    });
+    if (output[0]['index'] == 2) {
+      await CommonSuccessDialog.show(
+          messageText: 'Tardio', acceptText: 'Aceptar');
+    } else if (output[0]['index'] == 1) {
+      await CommonSuccessDialog.show(
+          messageText: 'Saludable', acceptText: 'Aceptar');
+    } else {
+      await CommonSuccessDialog.show(
+          messageText: 'Saludable', acceptText: 'Aceptar');
+    }
+  }
+
+  loadModel() async {
+    try {
+      String res = await Tflite.loadModel(
+          model: "assets/model_unquant.tflite",
+          labels: "assets/labels.txt",
+          numThreads: 1, // defaults to 1
+          isAsset:
+              true, // defaults to true, set to false to load resources outside assets
+          useGpuDelegate:
+              false // defaults to false, set to true to use GPU delegate
+          );
+    } catch (e) {
+      print("ERROR $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +108,7 @@ class ClasificationScreen extends StatelessWidget {
                           onTap: () async {
                             _file = await trigger();
                             print("_file $_file");
+
                             ClasifficationController.to.mainPhotoRx.value =
                                 _file;
                           },
@@ -54,6 +131,8 @@ class ClasificationScreen extends StatelessWidget {
                         image: ClasifficationController.to.mainPhotoRx.value,
                         press: () {
                           ClasifficationController.to.mainPhotoRx.value = null;
+                          ClasifficationController.to.stateClasification.value =
+                              null;
                         },
                       ),
               ),
@@ -62,7 +141,16 @@ class ClasificationScreen extends StatelessWidget {
               ),
               Obx(() => ClasifficationController.to.mainPhotoRx.value != null
                   ? FlatButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        setState(() {
+                          if (_file != null) {
+                            _image = File(_file.path);
+                          } else {
+                            print('No image selected.');
+                          }
+                        });
+
+                        clasifyImage(_file);
                         ClasifficationController.to.existResponse.value = true;
                       },
                       child: Text(
@@ -72,8 +160,22 @@ class ClasificationScreen extends StatelessWidget {
                       color: kPrimaryColor,
                     )
                   : Container()),
+              // FlatButton(
+              //     onPressed: () {
+              //       this.getImage();
+              //     },
+              //     child: Text('clasificar')),
               Text('Carge su imagen para analizar'),
-              Obx(() => ClasifficationController.to.existResponse.value
+              Obx(() =>
+                  ClasifficationController.to.stateClasification.value == 1 &&
+                          ClasifficationController.to.mainPhotoRx.value != null
+                      ? Container(
+                          child: Text('Saludable'),
+                        )
+                      : Container()),
+              Obx(() => ClasifficationController.to.stateClasification.value ==
+                          0 ||
+                      ClasifficationController.to.stateClasification.value == 2
                   ? Column(
                       children: [
                         Card(
@@ -96,7 +198,9 @@ class ClasificationScreen extends StatelessWidget {
                         ),
                       ],
                     )
-                  : Container())
+                  : Container(
+                      child: Text('No hay enfermedades'),
+                    ))
             ],
           ),
         ),

@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 class ClasifficationController extends GetxController {
   static ClasifficationController get to => Get.find();
 
+  final stateClasification = 0.obs;
+
   final existResponse = false.obs;
 
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potatoes_test/contacts/screens/map/map.dart';
+import 'package:potatoes_test/clasification/contacts/screens/map/map.dart';
 
 class MapScren extends StatelessWidget {
   const MapScren({Key key}) : super(key: key);

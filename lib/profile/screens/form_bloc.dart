@@ -54,6 +54,7 @@ class ProfileFormBloc extends FormBloc<String, String> {
     print(documentNumber.value);
     print(phone.value);
     print(email.value);
+    ProfileController.to.firstName.value = firstName.value;
 
     final _client = Get.find<GraphQLClient>();
     final result = await _client.mutate(
@@ -75,6 +76,9 @@ class ProfileFormBloc extends FormBloc<String, String> {
           print("RES ${result.data}");
           ProfileController.to.firstName.value =
               result.data['updateClientProfile']['nombre'];
+        },
+        onError: (error) {
+          print(error);
         },
       ),
     );

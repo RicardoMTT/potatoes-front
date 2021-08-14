@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:potatoes_test/contacts/screens/map/map.dart';
-import 'package:potatoes_test/contacts/screens/map/screen.dart';
+import 'package:potatoes_test/clasification/contacts/screens/map/screen.dart';
 
 class CommonCard extends StatelessWidget {
   const CommonCard({Key key}) : super(key: key);
