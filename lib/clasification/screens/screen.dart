@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:potatoes_test/app_constants/color.dart';
+import 'package:potatoes_test/app_widgets/common_error_dialog.dart';
 import 'package:potatoes_test/app_widgets/common_success_dialog.dart';
 import 'package:potatoes_test/app_widgets/image_picker_wrapper.dart';
+import 'package:potatoes_test/app_widgets/loading_dialog.dart';
 import 'package:potatoes_test/clasification/contacts/screens/screen.dart';
 import 'package:potatoes_test/clasification/recommendations/screen.dart';
 import 'package:potatoes_test/clasification/screens/clasification_controller.dart';
@@ -61,13 +63,13 @@ class _ClasificationScreenState extends State<ClasificationScreen> {
       _estado = true;
     });
     if (output[0]['index'] == 2) {
-      await CommonSuccessDialog.show(
+      await CommonErrorDialog.show(
           messageText: 'Tardio', acceptText: 'Aceptar');
     } else if (output[0]['index'] == 1) {
       await CommonSuccessDialog.show(
           messageText: 'Saludable', acceptText: 'Aceptar');
     } else {
-      await CommonSuccessDialog.show(
+      await CommonErrorDialog.show(
           messageText: 'Saludable', acceptText: 'Aceptar');
     }
   }
@@ -149,7 +151,10 @@ class _ClasificationScreenState extends State<ClasificationScreen> {
                             print('No image selected.');
                           }
                         });
+                        LoadingDialog.show();
 
+                        await Future.delayed(Duration(seconds: 2));
+                        LoadingDialog.hide();
                         clasifyImage(_file);
                         ClasifficationController.to.existResponse.value = true;
                       },
@@ -165,17 +170,21 @@ class _ClasificationScreenState extends State<ClasificationScreen> {
               //       this.getImage();
               //     },
               //     child: Text('clasificar')),
-              Text('Carge su imagen para analizar'),
+              Text(
+                  'Carge su imagen para analizar ${ClasifficationController.to.stateClasification.value}'),
               Obx(() =>
                   ClasifficationController.to.stateClasification.value == 1 &&
                           ClasifficationController.to.mainPhotoRx.value != null
                       ? Container(
-                          child: Text('Saludable'),
+                          child: Text('Saludable '),
                         )
                       : Container()),
-              Obx(() => ClasifficationController.to.stateClasification.value ==
-                          0 ||
-                      ClasifficationController.to.stateClasification.value == 2
+              Obx(() => (ClasifficationController.to.stateClasification.value ==
+                              0 ||
+                          ClasifficationController
+                                  .to.stateClasification.value ==
+                              2) &&
+                      (ClasifficationController.to.mainPhotoRx.value != null)
                   ? Column(
                       children: [
                         Card(

@@ -50,6 +50,8 @@ class ProfileFormBloc extends FormBloc<String, String> {
 
   @override
   void onSubmitting() async {
+    LoadingDialog.show();
+
     print(firstName.value);
     print(documentNumber.value);
     print(phone.value);
@@ -61,7 +63,7 @@ class ProfileFormBloc extends FormBloc<String, String> {
       MutationOptions(
         document: updateProfileDoc,
         variables: {
-          'nombre ': firstName.value,
+          'nombre': firstName.value,
           'dni': documentNumber.value,
           'telefono': phone.value
         },

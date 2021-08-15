@@ -137,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
               //                         color: Colors.red,
               //                       ),
               //                       child: Image.network(
-              //                         "https://potatoes-app-heroku.herokuapp.com" +
+              //                         "https://potatoes-app-heroku.herokuapp.com/" +
               //                             e['avatar']['url'],
               //                         fit: BoxFit.cover,
               //                       ),

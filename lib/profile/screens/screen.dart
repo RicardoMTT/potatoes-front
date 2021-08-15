@@ -65,7 +65,7 @@ class ProfileScreen extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Welcome back',
+                              'Bienvenido',
                               style: GoogleFonts.lato(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 24,

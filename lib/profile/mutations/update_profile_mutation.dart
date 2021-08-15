@@ -1,8 +1,7 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 final updateProfileDoc = gql(r'''
-
- mutation updateClientMutation($nombre:String,$telefono:String,$dni:String){
+mutation updateClientMutation($nombre:String,$telefono:String,$dni:String){
   updateClientProfile(input:{
     cliente:{
       nombre:$nombre,
@@ -10,15 +9,15 @@ final updateProfileDoc = gql(r'''
       dni:$dni
     }
   }){
-  id
+    __typename
+    id
     nombre
     apellido
-    telefono
+     telefono
     usuario{
       email
     }
     dni
   }
 }
-
 ''');
