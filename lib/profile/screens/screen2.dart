@@ -19,7 +19,7 @@ class Prueba extends StatelessWidget {
               CommonTextField(
                 keyBoardType: TextInputType.text,
                 textFieldBloc: _formBloc.firstName,
-                placeholder: "Nombre y apellido",
+                placeholder: "Nombres",
                 icon: Icons.person,
               ),
               SizedBox(

@@ -10,7 +10,7 @@ class SplashScreenController extends GetxController {
   }
 
   void _init() async {
-    await sleep(1000);
+    await sleep(4000);
     Get.offAllNamed(AppRoutes.login);
   }
 }

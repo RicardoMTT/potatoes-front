@@ -65,6 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       final percentage = index - value;
                       final rotation =
                           double.parse(percentage.clamp(0, 1).toString());
+
+                      print("SLIDER ${sliders[index]}");
                       return Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Column(
@@ -92,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 10,
                             ),
                             Text(
-                              'Descripción',
+                              slider['titulo'],
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 20),
                             ),

@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 import 'package:potatoes_test/clasification/contacts/screens/map/screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CommonCard extends StatelessWidget {
-  const CommonCard({Key key}) : super(key: key);
+  final name;
+  final lastName;
+  final longitude;
+  final latitude;
+  const CommonCard(
+      {Key key, this.name, this.lastName, this.longitude, this.latitude})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +43,7 @@ class CommonCard extends StatelessWidget {
                   Container(
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.only(left: 6),
-                    child: Text('Ricardo Tovar',
+                    child: Text("$name  $lastName",
                         textAlign: TextAlign.start,
                         style: Theme.of(context).textTheme.headline5.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 17)),
@@ -93,6 +101,8 @@ class BottomSheetEmergency extends StatefulWidget {
 }
 
 class _BottomSheetEmergencyState extends State<BottomSheetEmergency> {
+  final longitud = 0;
+  final latitud = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -129,7 +139,11 @@ class _BottomSheetEmergencyState extends State<BottomSheetEmergency> {
                   RaisedButton(
                     elevation: 1,
                     color: Colors.white,
-                    onPressed: () {},
+                    onPressed: () async {
+                      bool res = await FlutterPhoneDirectCaller.callNumber(
+                          "967728000");
+                      print("RES $res");
+                    },
                     child: Icon(
                       Icons.call,
                       color: Colors.blue,
@@ -149,7 +163,9 @@ class _BottomSheetEmergencyState extends State<BottomSheetEmergency> {
                   RaisedButton(
                     elevation: 1,
                     color: Colors.white,
-                    onPressed: () {},
+                    onPressed: () {
+                      launchWhatsApp("+51967728000", "HI");
+                    },
                     child: Icon(
                       Icons.messenger,
                       color: Colors.green,
@@ -162,5 +178,10 @@ class _BottomSheetEmergencyState extends State<BottomSheetEmergency> {
         ),
       ),
     );
+  }
+
+  void launchWhatsApp(number, message) async {
+    String url = "https://wa.me/$number?text=Hello";
+    await canLaunch(url) ? launch(url) : print('ERRRor');
   }
 }

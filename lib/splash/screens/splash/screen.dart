@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -7,8 +8,10 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Placeholder(
-          color: Colors.blue,
+        child: Container(
+          child: FadeInUpBig(
+            child: Image.asset('assets/images/login/plants.gif'),
+          ),
         ),
       ),
     );

@@ -11,8 +11,8 @@ class MapScren extends StatelessWidget {
         title: Text('Contacto por mapa'),
       ),
       body: SearchGaragesInMapScreenMap(
-        latitudeMap: 37.43296265331129,
-        longitudeMap: -122.08832357078792,
+        latitudeMap: -12.0561525,
+        longitudeMap: -77.0867083,
       ),
     );
   }

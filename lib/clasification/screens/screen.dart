@@ -63,21 +63,21 @@ class _ClasificationScreenState extends State<ClasificationScreen> {
       _estado = true;
     });
     if (output[0]['index'] == 2) {
-      await CommonErrorDialog.show(
-          messageText: 'Tardio', acceptText: 'Aceptar');
-    } else if (output[0]['index'] == 1) {
       await CommonSuccessDialog.show(
-          messageText: 'Saludable', acceptText: 'Aceptar');
+          messageText: 'saludable', acceptText: 'Aceptar');
+    } else if (output[0]['index'] == 1) {
+      await CommonErrorDialog.show(
+          messageText: 'Temprano', acceptText: 'Aceptar');
     } else {
       await CommonErrorDialog.show(
-          messageText: 'Saludable', acceptText: 'Aceptar');
+          messageText: 'Tardio', acceptText: 'Aceptar');
     }
   }
 
   loadModel() async {
     try {
       String res = await Tflite.loadModel(
-          model: "assets/model_unquant.tflite",
+          model: "assets/model.tflite",
           labels: "assets/labels.txt",
           numThreads: 1, // defaults to 1
           isAsset:
@@ -170,46 +170,62 @@ class _ClasificationScreenState extends State<ClasificationScreen> {
               //       this.getImage();
               //     },
               //     child: Text('clasificar')),
-              Text(
-                  'Carge su imagen para analizar ${ClasifficationController.to.stateClasification.value}'),
+              Text('Carge su imagen para analizar'),
               Obx(() =>
-                  ClasifficationController.to.stateClasification.value == 1 &&
+                  ClasifficationController.to.stateClasification.value == 2 &&
                           ClasifficationController.to.mainPhotoRx.value != null
                       ? Container(
                           child: Text('Saludable '),
                         )
                       : Container()),
-              Obx(() => (ClasifficationController.to.stateClasification.value ==
-                              0 ||
-                          ClasifficationController
-                                  .to.stateClasification.value ==
-                              2) &&
-                      (ClasifficationController.to.mainPhotoRx.value != null)
-                  ? Column(
-                      children: [
-                        Card(
-                          elevation: 0,
-                          child: RaisedButton(
-                            onPressed: () {
-                              Get.to(ContactWidget());
-                            },
-                            child: Text('Contactar con profesional'),
+
+              Obx(
+                () => (ClasifficationController.to.stateClasification.value ==
+                                0 ||
+                            ClasifficationController
+                                    .to.stateClasification.value ==
+                                1) &&
+                        (ClasifficationController.to.mainPhotoRx.value != null)
+                    ? Column(
+                        children: [
+                          Card(
+                            elevation: 0,
+                            child: RaisedButton(
+                              onPressed: () {
+                                Get.to(ContactWidget());
+                              },
+                              child: Text('Contactar con profesional'),
+                            ),
                           ),
-                        ),
-                        Card(
-                          elevation: 0,
-                          child: RaisedButton(
-                            onPressed: () {
-                              Get.to(RecomendationScreen());
-                            },
-                            child: Text('Ver recomendaciones'),
+                          Card(
+                            elevation: 0,
+                            child: RaisedButton(
+                              onPressed: () {
+                                Get.to(RecomendationScreen());
+                              },
+                              child: Text('Ver recomendaciones'),
+                            ),
                           ),
-                        ),
-                      ],
-                    )
-                  : Container(
-                      child: Text('No hay enfermedades'),
-                    ))
+                        ],
+                      )
+                    : Obx(
+                        () => ClasifficationController.to.mainPhotoRx.value !=
+                                    null &&
+                                ClasifficationController
+                                        .to.stateClasification.value ==
+                                    2
+                            ? Container(
+                                child: Text(
+                                  'No hay enfermedades',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueAccent),
+                                ),
+                              )
+                            : Container(),
+                      ),
+              )
             ],
           ),
         ),

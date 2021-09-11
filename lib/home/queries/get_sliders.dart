@@ -5,6 +5,7 @@ final getSlidersQueryDoc = gql(r'''
   sliders{
     id
     descripcion
+    titulo
     avatar{
       url
     }

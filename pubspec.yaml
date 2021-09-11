@@ -39,6 +39,8 @@ dependencies:
   google_maps_flutter: ^1.2.0
   geolocator: ^6.2.1
   tflite:
+  animate_do:
+  flutter_phone_direct_caller:
 
 dev_dependencies:
   flutter_test:
